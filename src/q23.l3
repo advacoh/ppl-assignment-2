@@ -1,0 +1,28 @@
+
+(define (dict lst) lst)
+
+(define (dict? d)
+   (and (list? d)
+        (or (null? d)
+            (and (pair? (car d))
+                 (symbol? (car (car d)))  
+                 (dict? (cdr d))))))
+
+(define (make-error msg)
+  (list 'error msg))
+
+(define (get d key)
+  (if (null? d)
+      (make-error "key not found!")
+      (if (eq? (caar d) key)
+          (cdr(car d))
+          (get (cdr d) key))))
+  
+  
+(define (is-error? x)               
+   (and (list? x) (eq? (car x) 'error)))
+  
+(define (bind x f)
+  (if (is-error? x)
+      x
+      (f x)))
