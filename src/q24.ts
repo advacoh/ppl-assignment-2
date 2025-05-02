@@ -1,46 +1,27 @@
-import {
-    Program, Exp, CExp, Binding, DictExp,
-    makeProgram, makeVarRef, makeAppExp, makeLitExp,
-    isDefineExp, isIfExp, isProcExp, isLetExp, isAppExp,
-    isDictExp, isNumExp, isBoolExp, isStrExp, isVarRef
-  } from "./L32/L32-ast";
-  
-  import {
-    makeCompoundSExp, makeEmptySExp, makeSymbolSExp, SExpValue
-  } from "./L32/L32-value";
-  
-  const cexpToSExp = (ce: CExp): SExpValue =>
-    isNumExp(ce)  ? ce.val :
-    isBoolExp(ce) ? ce.val :
-    isStrExp(ce)  ? ce.val :
-    isVarRef(ce)  ? makeSymbolSExp(ce.var) :
-    makeSymbolSExp("?");
-  
-  const bindingToPair = (b: Binding): SExpValue =>
-    makeCompoundSExp(makeSymbolSExp(b.var.var), cexpToSExp(b.val));
-  
-  const listOfPairs = (pairs: SExpValue[]): SExpValue =>
-    pairs.reduceRight<SExpValue>((acc, p) => makeCompoundSExp(p, acc), makeEmptySExp());
-  
-  const rewriteDict = (de: DictExp): CExp =>
-    makeAppExp(makeVarRef("dict"), [makeLitExp(listOfPairs(de.entries.map(bindingToPair)))]);
-  
-  const trC = (ce: CExp): CExp => {
-    if (isDictExp(ce)) return rewriteDict(ce);
-    if (isIfExp(ce))   return { ...ce, test: trC(ce.test), then: trC(ce.then), alt: trC(ce.alt) };
-    if (isProcExp(ce)) return { ...ce, body: ce.body.map(trC) };
-    if (isLetExp(ce))  return { ...ce, bindings: ce.bindings.map(b => ({ ...b, val: trC(b.val) })), body: ce.body.map(trC) };
-    if (isAppExp(ce))  return { ...ce, rator: trC(ce.rator), rands: ce.rands.map(trC) };
-    return ce;
-  };
-  
-  const trE = (e: Exp): Exp =>
-    isDefineExp(e) ? { ...e, val: trC((e as any).val) } : trC(e as CExp);
-  
-  export const Dict2App = (prog: Program): Program =>
-    makeProgram(prog.exps.map(trE));
-  
 
+/*
+Purpose: rewrite all occurrences of DictExp in a program to AppExp.
+Signature: Dict2App (exp)
+Type: Program -> Program
+*/
+
+
+import { CExp, isCExp, makeProgram, Program } from './L32/L32-ast';
+
+export const Dict2App  = (exp: Program) : Program =>        
+    
+    //@TODO
+    makeProgram([]);
+
+export type AppExp = {tag: "AppExp"; rator: CExp; rands: CExp[]; }
+export const makeAppExp = (rator: CExp, rands: CExp[]): AppExp =>
+    ({tag: "AppExp", rator: rator, rands: rands});
+/*
+Purpose: Transform L32 program to L3
+Signature: L32ToL3(prog)
+Type: Program -> Program
+*/
 export const L32toL3 = (prog : Program): Program =>
     //@TODO
     makeProgram([]);
+// 
