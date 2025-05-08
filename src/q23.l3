@@ -3,14 +3,20 @@
   (lambda (pairs)         
     pairs))
 
+
+
 (define dict?
   (lambda (d)
-    (if (eq? d '())                 
+    (if (eq? d '())
         #t
-        (if (and (pair? d)
-                 (pair? (car d))
-                 (symbol? (car (car d))))
-            (dict? (cdr d))         
+        (if (pair? d)
+            (if (pair? (car d))
+                (if (symbol? (car (car d)))
+                    (if (not (number? (car (car d))))
+                        (dict? (cdr d))
+                        #f)
+                    #f)
+                #f)
             #f))))
 
 (define make-error

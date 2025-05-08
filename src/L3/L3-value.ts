@@ -48,9 +48,10 @@ export const isCompoundSExp = (x: any): x is CompoundSExp => x.tag === "Compound
 export const makeEmptySExp = (): EmptySExp => ({tag: "EmptySExp"});
 export const isEmptySExp = (x: any): x is EmptySExp => x.tag === "EmptySExp";
 
-export const makeSymbolSExp = (val: string): SymbolSExp =>
+export const makeSymbolSExp = (val: string): SymbolSExp => 
+    
     ({tag: "SymbolSExp", val: val});
-export const isSymbolSExp = (x: any): x is SymbolSExp => x.tag === "SymbolSExp";
+export const isSymbolSExp = (x: any): x is SymbolSExp  => x.tag === "SymbolSExp";
 
 // LitSExp are equivalent to JSON - they can be parsed and read as literal values
 // like SExp except that non functional values (PrimOp and Closures) can be embedded at any level.
